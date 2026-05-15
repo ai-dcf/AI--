@@ -1,0 +1,141 @@
+<view class="create-page">
+  <t-message id="t-message" />
+
+  <scroll-view class="create-scroll" scroll-y enhanced show-scrollbar="{{false}}">
+    <block wx:if="{{currentState === 'input'}}">
+      <view class="input-section">
+        <view class="section-header">
+          <t-icon name="edit" size="32rpx" color="#0052D9" />
+          <text class="section-title">描述你想要的画面</text>
+        </view>
+
+        <t-textarea
+          placeholder="试试描述：主角 + 在哪里 + 做什么 + 像什么风格？\n例如：一只橘猫在窗台上看夕阳，油画风格"
+          value="{{prompt}}"
+          bind:change="onPromptChange"
+          maxlength="{{500}}"
+          indicator
+          autosize
+          t-class="prompt-textarea"
+        />
+
+        <view class="style-section">
+          <text class="style-label">常用风格（点击添加）</text>
+          <view class="style-tags">
+            <view
+              class="style-tag {{item.selected ? 'style-tag--active' : ''}}"
+              wx:for="{{styleTags}}"
+              wx:key="label"
+              data-index="{{index}}"
+              bindtap="onStyleTagTap"
+            >
+              <text class="style-tag-text">{{item.icon}} {{item.label}}</text>
+            </view>
+          </view>
+        </view>
+
+        <view class="negative-section">
+          <text class="negative-label">不希望出现的内容（可选）</text>
+          <t-input
+            placeholder="例如：不要文字、不要模糊"
+            value="{{negativePrompt}}"
+            bind:change="onNegativePromptChange"
+            t-class="negative-input"
+          />
+        </view>
+
+        <view class="inspiration-row" bindtap="onInspirationTap">
+          <t-icon name="lightbulb" size="28rpx" color="#ED7B2F" />
+          <text class="inspiration-label">灵感推荐</text>
+          <text class="inspiration-desc">查看优质提示词和范例图片</text>
+        </view>
+      </view>
+
+      <view class="generate-btn-wrapper">
+        <t-button
+          theme="primary"
+          size="large"
+          block
+          icon="lightning"
+          bindtap="onGenerate"
+          loading="{{false}}"
+        >
+          生成图片
+        </t-button>
+      </view>
+    </block>
+
+    <block wx:if="{{currentState === 'generating'}}">
+      <view class="generating-section">
+        <view class="generating-indicator">
+          <view class="pulse-ring"></view>
+          <view class="pulse-icon-bg">
+            <t-icon name="lightning" size="56rpx" color="#0052D9" />
+          </view>
+        </view>
+
+        <text class="generating-title">AI 正在创作中...</text>
+        <text class="generating-subtitle">预计需要 10-30 秒，请耐心等待</text>
+
+        <view class="generating-preview">
+          <view class="shimmer-placeholder">
+            <t-icon name="image" size="80rpx" color="#CCCCCC" />
+          </view>
+        </view>
+
+        <view class="progress-bar-wrapper">
+          <view class="progress-bar-track">
+            <view class="progress-bar-fill" style="width: {{progress}}%"></view>
+          </view>
+          <text class="progress-text">生成进度 {{progress}}%</text>
+        </view>
+      </view>
+    </block>
+
+    <block wx:if="{{currentState === 'complete'}}">
+      <view class="complete-section">
+        <view class="complete-header">
+          <t-icon name="check-circle" size="32rpx" color="#00A870" />
+          <text class="complete-title">生成完成</text>
+        </view>
+
+        <view class="result-image-wrapper">
+          <image class="result-image" src="{{generatedImageUrl}}" mode="aspectFill" />
+        </view>
+
+        <view class="prompt-card">
+          <text class="prompt-card-label">提示词</text>
+          <text class="prompt-card-text">{{prompt}}</text>
+        </view>
+
+        <view class="complete-actions">
+          <t-button
+            theme="light"
+            size="large"
+            icon="refresh"
+            bindtap="onRegenerate"
+            t-class="action-btn"
+          >
+            重新生成
+          </t-button>
+          <t-button
+            theme="success"
+            size="large"
+            icon="check"
+            bindtap="onPublish"
+            t-class="action-btn"
+          >
+            发布
+          </t-button>
+        </view>
+
+        <view class="publish-hint">
+          <t-icon name="info-circle" size="28rpx" color="#0052D9" />
+          <text class="publish-hint-text">发布后图片将出现在首页画廊，所有用户可见</text>
+        </view>
+      </view>
+    </block>
+
+    <view class="bottom-spacer"></view>
+  </scroll-view>
+</view>

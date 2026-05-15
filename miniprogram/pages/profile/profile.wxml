@@ -1,0 +1,109 @@
+<view class="profile-page">
+  <block wx:if="{{!isLoggedIn}}">
+    <view class="not-logged-section">
+      <view class="avatar-placeholder">
+        <t-icon name="user-circle" size="144rpx" color="#CCCCCC" />
+      </view>
+      <text class="login-hint">登录后查看个人画廊</text>
+      <view class="login-btn-wrapper">
+        <t-button
+          theme="primary"
+          size="large"
+          block
+          icon="chat"
+          bindtap="onWechatLogin"
+        >
+          微信一键登录
+        </t-button>
+      </view>
+    </view>
+
+    <view class="empty-gallery-card">
+      <view class="empty-inner">
+        <t-icon name="image" size="96rpx" color="#D5D5D5" />
+        <text class="empty-text">登录后查看你的个人画廊</text>
+      </view>
+    </view>
+  </block>
+
+  <block wx:else>
+    <view class="logged-header">
+      <view class="header-bg"></view>
+      <view class="user-info-section">
+        <image class="user-avatar" src="{{userInfo.avatarUrl}}" mode="aspectFill" />
+        <view class="user-meta">
+          <text class="user-name">{{userInfo.nickName}}</text>
+          <text class="user-bio">用 AI 描绘想象中的世界</text>
+        </view>
+      </view>
+      <view class="user-stats">
+        <view class="stat-item">
+          <text class="stat-value">{{stats.works}}</text>
+          <text class="stat-label">作品</text>
+        </view>
+        <view class="stat-item">
+          <text class="stat-value">{{stats.likes}}</text>
+          <text class="stat-label">获赞</text>
+        </view>
+        <view class="stat-item">
+          <text class="stat-value">{{stats.favorites}}</text>
+          <text class="stat-label">收藏</text>
+        </view>
+      </view>
+    </view>
+
+    <view class="gallery-card">
+      <view class="gallery-header">
+        <text class="gallery-title">个人画廊</text>
+        <text class="gallery-more" bindtap="onViewAllTap">查看全部</text>
+      </view>
+      <view class="gallery-grid">
+        <view
+          class="gallery-grid-item"
+          wx:for="{{myGallery}}"
+          wx:key="*this"
+          data-index="{{index}}"
+          bindtap="onGalleryItemTap"
+        >
+          <image class="gallery-image" src="{{item}}" mode="aspectFill" lazy-load />
+        </view>
+        <view class="gallery-grid-item gallery-add" bindtap="onCreateTap">
+          <t-icon name="add" size="40rpx" color="#BBBBBB" />
+          <text class="add-text">更多</text>
+        </view>
+      </view>
+    </view>
+
+    <view class="menu-card">
+      <t-cell-group bordered="{{false}}">
+        <t-cell
+          title="创作历史"
+          arrow
+          hover
+          t-class="menu-cell"
+          bindtap="onHistoryTap"
+        >
+          <t-icon slot="left-icon" name="time" size="40rpx" />
+        </t-cell>
+        <t-cell
+          title="隐私设置"
+          arrow
+          hover
+          t-class="menu-cell"
+          bindtap="onPrivacyTap"
+        >
+          <t-icon slot="left-icon" name="lock-on" size="40rpx" />
+        </t-cell>
+        <t-cell
+          title="帮助与反馈"
+          arrow
+          hover
+          t-class="menu-cell"
+          bindtap="onHelpTap"
+        >
+          <t-icon slot="left-icon" name="help-circle" size="40rpx" />
+        </t-cell>
+      </t-cell-group>
+    </view>
+  </block>
+</view>
