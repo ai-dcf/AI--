@@ -1,3 +1,5 @@
+import Message from 'tdesign-miniprogram/message/index'
+
 const STYLE_TAGS = [
   { label: '写实', icon: '🎨', selected: false },
   { label: '动漫', icon: '🌸', selected: false },
@@ -6,6 +8,8 @@ const STYLE_TAGS = [
   { label: '油画', icon: '🖌️', selected: false },
   { label: '水彩', icon: '💧', selected: false },
 ]
+
+const STYLE_LABELS = STYLE_TAGS.map(t => t.label)
 
 type CreateState = 'input' | 'generating' | 'complete'
 
@@ -37,7 +41,8 @@ Component({
         .map(t => t.label)
         .join('、')
       const currentPrompt = this.data.prompt
-      const basePrompt = currentPrompt.replace(/[,，]\s*(写实|动漫|电影感|梦幻|油画|水彩)(?:[,，]\s*(写实|动漫|电影感|梦幻|油画|水彩))*$/, '').trim()
+      const stylePattern = STYLE_LABELS.join('|')
+      const basePrompt = currentPrompt.replace(new RegExp(`[,，]\\s*(?:${stylePattern})(?:[,，]\\s*(?:${stylePattern}))*$`), '').trim()
       this.setData({
         styleTags: tags,
         prompt: selectedStyles ? `${basePrompt}${basePrompt ? '，' : ''}${selectedStyles}` : basePrompt,
@@ -94,10 +99,19 @@ Component({
     },
 
     showMessage(content: string, type: string) {
-      const msg = this.selectComponent('#t-message')
-      if (msg) {
-        msg.show({ content, type, duration: 2000 })
+      const themeMap: Record<string, 'info' | 'success' | 'warning' | 'error'> = {
+        info: 'info',
+        success: 'success',
+        warning: 'warning',
+        error: 'error',
       }
+      const theme = themeMap[type] || 'info'
+      Message[theme]({
+        context: this,
+        selector: '#t-message',
+        content,
+        duration: 2000,
+      })
     },
   },
 })
