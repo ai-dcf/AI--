@@ -75,6 +75,66 @@
   color: var(--brand-color);
 }
 
+.ratio-section {
+  margin-bottom: 24rpx;
+}
+
+.ratio-label {
+  font-size: 20rpx;
+  color: var(--td-text-secondary);
+  margin-bottom: 16rpx;
+  display: block;
+}
+
+.ratio-options {
+  display: flex;
+  gap: 16rpx;
+}
+
+.ratio-option {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8rpx;
+  padding: 16rpx 20rpx;
+  border-radius: 16rpx;
+  background: var(--td-bg);
+  border: 2rpx solid var(--td-border);
+  min-width: 80rpx;
+}
+
+.ratio-option--active {
+  background: var(--brand-color-light);
+  border-color: rgba(0, 82, 217, 0.3);
+}
+
+.ratio-icon-box {
+  width: 44rpx;
+  height: 44rpx;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.ratio-icon-inner {
+  border: 3rpx solid #999;
+  border-radius: 4rpx;
+}
+
+.ratio-option--active .ratio-icon-inner {
+  border-color: var(--brand-color);
+}
+
+.ratio-option-label {
+  font-size: 22rpx;
+  color: #666;
+}
+
+.ratio-option--active .ratio-option-label {
+  color: var(--brand-color);
+  font-weight: 500;
+}
+
 .negative-section {
   margin-bottom: 24rpx;
 }
@@ -258,7 +318,7 @@
 
 .result-image {
   width: 100%;
-  aspect-ratio: 1;
+  display: block;
 }
 
 .prompt-card {

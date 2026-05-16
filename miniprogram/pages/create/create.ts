@@ -11,6 +11,14 @@ const STYLE_TAGS = [
 
 const STYLE_LABELS = STYLE_TAGS.map(t => t.label)
 
+const RATIO_OPTIONS = [
+  { label: '1:1', desc: '正方形', size: '1280*1280', ratio: 1 },
+  { label: '3:4', desc: '竖版', size: '1104*1472', ratio: 3 / 4 },
+  { label: '4:3', desc: '横版', size: '1472*1104', ratio: 4 / 3 },
+  { label: '9:16', desc: '长竖版', size: '960*1696', ratio: 9 / 16 },
+  { label: '16:9', desc: '长横版', size: '1696*960', ratio: 16 / 9 },
+]
+
 const POLL_INTERVAL = 3000
 const MAX_POLL_COUNT = 60
 
@@ -22,7 +30,10 @@ Component({
     prompt: '',
     negativePrompt: '',
     styleTags: STYLE_TAGS,
+    ratioOptions: RATIO_OPTIONS,
+    selectedRatioIndex: 0,
     generatedImageUrl: '',
+    resultRatio: 1,
     progress: 0,
     taskId: '',
     pollCount: 0,
@@ -58,6 +69,11 @@ Component({
       })
     },
 
+    onRatioTap(e: any) {
+      const { index } = e.currentTarget.dataset
+      this.setData({ selectedRatioIndex: index })
+    },
+
     async onGenerate() {
       if (!this.data.prompt.trim()) {
         this.showMessage('请输入画面描述', 'warning')
@@ -73,6 +89,8 @@ Component({
 
       this.startProgressSimulation()
 
+      const selectedSize = this.data.ratioOptions[this.data.selectedRatioIndex].size
+
       try {
         const res = await wx.cloud.callFunction({
           name: 'text2image',
@@ -80,7 +98,7 @@ Component({
             name: 'create',
             prompt: this.data.prompt,
             negativePrompt: this.data.negativePrompt,
-            size: '1280*1280',
+            size: selectedSize,
             n: 1,
           },
         })
@@ -180,10 +198,12 @@ Component({
 
     onGenerateSuccess(imageUrl: string) {
       this.stopProgressSimulation()
+      const resultRatio = this.data.ratioOptions[this.data.selectedRatioIndex].ratio
       this.setData({
         currentState: 'complete',
         progress: 100,
         generatedImageUrl: imageUrl,
+        resultRatio,
       })
     },
 
